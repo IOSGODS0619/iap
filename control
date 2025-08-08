@@ -1,0 +1,6 @@
+Package: com.user.modmenuloader
+Name: ModMenuLoader
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: Floating neon skull mod menu loader (source)
+Maintainer: You <you@example.com>
