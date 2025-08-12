@@ -1,21 +1,32 @@
-name: Build Theos tweak
+name: Build Theos Tweak
 
 on:
-  push:
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Theos
-        uses: qkls/Theos-Action@v1
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y git make perl clang python3 libplist-utils ldid fakeroot
+
+      - name: Install Theos
+        run: |
+          git clone --recursive https://github.com/theos/theos.git $HOME/theos
+          echo "export THEOS=$HOME/theos" >> $GITHUB_ENV
+
       - name: Build tweak
         run: |
-          make package FINALPACKAGE=1
-      - name: Upload .deb file
+          export THEOS=$HOME/theos
+          make package
+
+      - name: Upload .deb artifact
         uses: actions/upload-artifact@v3
         with:
-          name: deb
-          path: ./packages/*.deb
+          name: built-deb
+          path: packages/*.deb
