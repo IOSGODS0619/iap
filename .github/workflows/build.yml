@@ -1,5 +1,4 @@
 name: Build Theos Tweak
-name: Build Theos Tweak
 
 on:
   push:
@@ -18,7 +17,6 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y git make perl clang python3 libplist-utils fakeroot cmake
-        # Build and install ldid manually
         git clone https://github.com/ProcursusTeam/ldid.git
         cd ldid
         ./make.sh
@@ -31,11 +29,12 @@ jobs:
         echo "THEOS=$HOME/theos" >> $GITHUB_ENV
 
     - name: Build tweak
-      run: |
-        make package
+      run: make package
+      env:
+        THEOS: ${{ env.THEOS }}
 
     - name: Upload .deb artifact
       uses: actions/upload-artifact@v3
       with:
         name: tweak-deb
-        path: ./*.deb
+        path: packages/*.deb
