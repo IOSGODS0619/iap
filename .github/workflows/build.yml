@@ -1,38 +1,41 @@
 name: Build Theos Tweak
+name: Build Theos Tweak
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Install dependencies
-  run: |
-    sudo apt update
-    sudo apt install -y git make perl clang python3 libplist-utils fakeroot cmake
-    # Build and install ldid manually
-    git clone https://github.com/ProcursusTeam/ldid.git
-    cd ldid
-    ./make.sh
-    sudo install -m 755 ldid /usr/local/bin/ldid
-    cd ..
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y git make perl clang python3 libplist-utils fakeroot cmake
+        # Build and install ldid manually
+        git clone https://github.com/ProcursusTeam/ldid.git
+        cd ldid
+        ./make.sh
+        sudo install -m 755 ldid /usr/local/bin/ldid
+        cd ..
 
-      - name: Install Theos
-        run: |
-          git clone --recursive https://github.com/theos/theos.git $HOME/theos
-          echo "export THEOS=$HOME/theos" >> $GITHUB_ENV
+    - name: Install Theos
+      run: |
+        git clone --recursive https://github.com/theos/theos.git $HOME/theos
+        echo "THEOS=$HOME/theos" >> $GITHUB_ENV
 
-      - name: Build tweak
-        run: |
-          export THEOS=$HOME/theos
-          make package
+    - name: Build tweak
+      run: |
+        make package
 
-      - name: Upload .deb artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: built-deb
-          path: packages/*.deb
+    - name: Upload .deb artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: tweak-deb
+        path: ./*.deb
