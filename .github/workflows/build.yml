@@ -1,0 +1,21 @@
+name: Build Theos tweak
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Theos
+        uses: qkls/Theos-Action@v1
+      - name: Build tweak
+        run: |
+          make package FINALPACKAGE=1
+      - name: Upload .deb file
+        uses: actions/upload-artifact@v3
+        with:
+          name: deb
+          path: ./packages/*.deb
