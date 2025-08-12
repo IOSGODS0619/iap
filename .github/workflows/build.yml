@@ -11,9 +11,15 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y git make perl clang python3 libplist-utils ldid fakeroot
+  run: |
+    sudo apt update
+    sudo apt install -y git make perl clang python3 libplist-utils fakeroot cmake
+    # Build and install ldid manually
+    git clone https://github.com/ProcursusTeam/ldid.git
+    cd ldid
+    ./make.sh
+    sudo install -m 755 ldid /usr/local/bin/ldid
+    cd ..
 
       - name: Install Theos
         run: |
