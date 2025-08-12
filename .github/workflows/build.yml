@@ -13,7 +13,12 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y git make perl clang python3 libplist-utils ldid fakeroot
+          sudo apt install -y git make perl clang python3 libplist-utils fakeroot
+          # Install ldid manually
+          git clone https://github.com/ProcursusTeam/ldid.git
+          cd ldid
+          sudo make install
+          cd ..
 
       - name: Install Theos
         run: |
